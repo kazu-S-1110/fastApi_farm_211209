@@ -24,3 +24,10 @@ async def db_create_todo(data: dict) -> Union[dict, bool]:
     if new_todo:
         return todo_serializer(new_todo)
     return False
+
+
+async def db_get_todos() -> list:
+    todos = []
+    for todo in await collection_todo.find().to_list(length=100):
+        todos.append(todo_serializer(todo))
+    return todos
