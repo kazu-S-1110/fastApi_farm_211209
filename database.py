@@ -39,3 +39,15 @@ async def db_get_single_todo(id: str) -> Union[dict, bool]:
     if todo:
         return todo_serializer(todo)
     return False
+
+
+async def db_update_todo(id: str, data: dict) -> Union[dict, bool]:
+    todo = await collection_todo.find_one({"_id": ObjectId(id)})
+    if todo:
+        updated_todo = await collection_todo.update_one(
+            {"_id": ObjectId(id)}, {"$set": data}
+        )
+        if updated_todo.modified_count > 0:
+            new_todo = await collection_todo.find_one({"_id": ObjectId(id)})
+            return todo_serializer(new_todo)
+    return False
