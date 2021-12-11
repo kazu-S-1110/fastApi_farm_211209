@@ -51,3 +51,12 @@ async def db_update_todo(id: str, data: dict) -> Union[dict, bool]:
             new_todo = await collection_todo.find_one({"_id": ObjectId(id)})
             return todo_serializer(new_todo)
     return False
+
+
+async def db_delete_todo(id: str) -> bool:
+    todo = await collection_todo.find_one({"_id": ObjectId(id)})
+    if todo:
+        deleted_todo = await collection_todo.delete_one({"_id": ObjectId(id)})
+        if (deleted_todo.deleted_count > 0):
+            return True
+    return False
