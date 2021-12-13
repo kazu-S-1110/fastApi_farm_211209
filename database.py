@@ -24,6 +24,13 @@ def todo_serializer(todo) -> dict:
     }
 
 
+def user_serializer(user) -> dict:
+    return {
+        "id": str(user["_id"]),
+        "email": user["email"]
+    }
+
+
 async def db_create_todo(data: dict) -> Union[dict, bool]:
     todo = await collection_todo.insert_one(data)
     new_todo = await collection_todo.find_one({"_id": todo.inserted_id})
@@ -77,3 +84,4 @@ async def db_signup(data: dict) -> dict:
         raise HTTPException(status_code=400, detail="Password too short")
     user = await collection_user.insert_one({"email": email, "password": auth.generate_hashed_pw(password)})
     new_user = await collection_user.find_one({"_id": user.inserted_id})
+    return user_serializer(new_user)
