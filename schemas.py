@@ -1,6 +1,6 @@
 # エンドポイントに渡すデータの型とかレスポンスのデータの型を定義していく。
+from typing import Optional
 from pydantic import BaseModel
-from starlette.types import Message
 
 
 class Todo(BaseModel):
@@ -16,3 +16,13 @@ class TodoBody(BaseModel):
 
 class SuccessMsg(BaseModel):
     message: str
+
+
+class UserBody(BaseModel):
+    email: str
+    password: str
+
+
+class UserInfo(BaseModel):
+    id: Optional[str] = None
+    email: str
