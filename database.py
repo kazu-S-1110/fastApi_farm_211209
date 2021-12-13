@@ -4,7 +4,6 @@ from decouple import config
 from fastapi.exceptions import HTTPException
 import motor.motor_asyncio
 from bson import ObjectId
-import passlib
 
 
 MONGO_API_KEY = config("MONGO_API_KEY")
@@ -85,3 +84,15 @@ async def db_signup(data: dict) -> dict:
     user = await collection_user.insert_one({"email": email, "password": auth.generate_hashed_pw(password)})
     new_user = await collection_user.find_one({"_id": user.inserted_id})
     return user_serializer(new_user)
+
+
+async def db_login(data: dict) -> str:
+    email = data.get("email")
+    password = data.get("password")
+    user = await collection_user.find_one({"email": email})
+    if not user or not auth.verify_pw(password, user["password"]):
+        raise HTTPException(
+            status_code=401, detail="Invalid email or password"
+        )
+    token = auth.encode_jwt(user["email"])
+    return token
