@@ -1,6 +1,13 @@
 # エンドポイントに渡すデータの型とかレスポンスのデータの型を定義していく。
 from typing import Optional
+from decouple import config
 from pydantic import BaseModel
+
+CSRF_KEY = config("CSRF_KEY")
+
+
+class CsrfSettings(BaseModel):
+    secret_key: str = CSRF_KEY
 
 
 class Todo(BaseModel):
