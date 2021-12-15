@@ -19,7 +19,7 @@ def get_csrf_token(csrf_protect: CsrfProtect = Depends()):
 
 
 @router.post("/api/register", response_model=UserInfo)
-async def signup(request: Request, csrf_protect: CsrfProtect, user: UserBody):
+async def signup(request: Request, user: UserBody, csrf_protect: CsrfProtect = Depends()):
     csrf_token = csrf_protect.get_csrf_from_headers(request.headers)
     csrf_protect.validate_csrf(csrf_token)
     user = jsonable_encoder(user)
