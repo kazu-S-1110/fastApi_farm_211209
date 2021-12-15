@@ -33,3 +33,7 @@ class UserBody(BaseModel):
 class UserInfo(BaseModel):
     id: Optional[str] = None
     email: str
+
+
+class Csrf(BaseModel):
+    csrf_token: str
